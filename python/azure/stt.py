@@ -41,7 +41,14 @@ class file_info:
         self.name = 'file'
         self.file_path = file_path
 
-def speech_recognize_continuous(server_info:(cloud_info or local_info), sound_info:(stream_info or file_info)):
+def speech_recognize_continuous(server_info, sound_info):
+    __funcName = sys._getframe(0).f_code.co_name
+    # instance check
+    if(not isinstance(server_info, local_info) and not isinstance(server_info, cloud_info)):
+        raise Exception('in function ' + __funcName + '(), path: ' + __file__  + ', class type of server_info is invalid: ' + str(type(server_info)))
+    elif(not isinstance(sound_info, stream_info) and not isinstance(sound_info, file_info)):
+        raise Exception('in function ' + __funcName + '(), path: ' + __file__  + ', class type of sound_info is invalid: ' + str(type(sound_info)))
+
     speech_config = None
     if server_info.name == 'local':
         speech_config = speechsdk.SpeechConfig(host=server_info.host)
