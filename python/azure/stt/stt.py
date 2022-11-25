@@ -69,13 +69,15 @@ def speech_recognize_continuous(server_info:(cloud_info or local_info), sound_in
 
     def push_stream_writer(stream, sound_info):
         # The number of bytes to push per buffer
-        n_bytes = (sound_info.sps>>2)*(sound_info.bps>>3)  # 250ms 
+        n_bytes = (sound_info.sps>>2)*(sound_info.bps>>3)  # 250ms
+        print('set read {} bytes'.format(n_bytes))
         wav_fh = wave.open(sound_info.src_info)
         # start pushing data until all data has been read from the file
         try:
             while True:
                 frames = wav_fh.readframes(n_bytes // 2)
-                print('read {} bytes'.format(len(frames)))
+                if len(frames) != n_bytes:
+                    print('last read {} bytes'.format(len(frames)))
                 if not frames:
                     break
                 stream.write(frames)
@@ -93,7 +95,6 @@ def speech_recognize_continuous(server_info:(cloud_info or local_info), sound_in
     def recognized_cb(evt: speechsdk.SessionEventArgs):
         nonlocal __accumulate_speech
         print('RECOGNIZED: {}'.format(evt))
-        print('str(type(evt)): ' + str(type(evt)))
 
         if __accumulate_speech == '':
             __accumulate_speech = evt.result.text
