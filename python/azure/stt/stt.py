@@ -12,7 +12,6 @@ class local_info:
         self.name = 'local'
         self.host = host
         self.language = "ko-KR"
-        print(self)
     def __del__(self):
         pass
 class cloud_info:
@@ -21,7 +20,6 @@ class cloud_info:
         self.speech_key = speech_key
         self.service_region = service_region
         self.language = "ko-KR"
-        print(self)
     def __del__(self):
         pass
 
@@ -33,14 +31,15 @@ class stream_info:
         self.ch = channels
         self.src = source
         self.src_info = source_info  # insert file path when src is file
-        print(self)
-        print('stream mode is not support yet')
+        if self.src != 'file':
+            print('in stream mode, only support \'file\' source')
+        else:
+            pass
 
 class file_info:
     def __init__(self, file_path):
         self.name = 'file'
         self.file_path = file_path
-        print(self)
 
 def speech_recognize_continuous(server_info:(cloud_info or local_info), sound_info:(stream_info or file_info)):
     speech_config = None
